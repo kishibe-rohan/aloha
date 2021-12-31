@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema({
-  user: {
+  userId: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
     required: true,
@@ -17,7 +17,7 @@ const PostSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  category: {
+  categoryId: {
     type: mongoose.Schema.ObjectId,
     ref: "Category",
     required: true,
