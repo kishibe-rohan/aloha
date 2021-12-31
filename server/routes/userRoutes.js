@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-import { register, login } from "../controllers/authController";
-import {
+const { register, login } = require("../controllers/authController");
+const {
   updateUser,
   deleteUser,
   followUser,
   unfollowUser,
   getUser,
-} from "../controllers/userController";
+} = require("../controllers/userController");
 
 router.post("/register", register);
 router.post("/login", login);

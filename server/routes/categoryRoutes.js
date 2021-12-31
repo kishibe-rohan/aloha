@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-import {
+const {
   followCategory,
   unfollowCategory,
-} from "../controllers/userController";
-import { getCategories, addCategory } from "../controllers/categoryController";
+} = require("../controllers/userController");
+const {
+  getCategories,
+  addCategory,
+} = require("../controllers/categoryController");
 
 router.get("/all", getCategories);
 router.post("/new", addCategory);

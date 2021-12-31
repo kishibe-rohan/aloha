@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
   },
   review: {
     type: String,
     maxLength: [500, "Review cannot exceed 500 chars"],
+    required: true,
   },
   img: {
     type: String,
@@ -18,8 +18,7 @@ const PostSchema = new mongoose.Schema({
     default: [],
   },
   categoryId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Category",
+    type: String,
     required: true,
   },
 });

@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 //Update User
 exports.updateUser = async (req, res) => {
-  if (req.body.password === req.params.id || req.body.isAdmin) {
+  if (req.body.userId === req.params.id || req.body.isAdmin) {
     //Update PW
     if (req.body.password) {
       try {
