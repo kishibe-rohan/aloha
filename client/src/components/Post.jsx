@@ -1,8 +1,11 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
+import {useSelector,useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {MoreVert} from '@material-ui/icons'
 import {format} from 'timeago.js'
 import styled from 'styled-components'
+
+import axios from 'axios'
 
 const Container = styled.div`
 width: 100%;
@@ -88,15 +91,45 @@ font-size:15px;
 `
 
 const Post = ({post}) => {
+    const [likes,setLikes] = useState(post.likes.length);
+    const [isLiked,setIsLiked] = useState(false);
+    const [author,setAuthor] = useState({});
+    const {user} = useSelector((state) => state.user);
+
+    useEffect(() => {
+        setIsLiked(post.likes.includes(user._id))
+    },[user._id,post.likes])
+
+    useEffect(() => {
+        const fetchAuthor = async() => {
+            const res = await axios.get(`/users?userId=${post.userId}`)
+            setAuthor(res.data);
+        }
+
+        fetchAuthor();
+    },[post.userId])
+
+    const handleLike = () => {
+        try{
+            axios.put('/posts' + post._id + '/like',{userId: user._id})
+        }catch(err)
+        {
+           console.log(err); 
+        }
+       
+        setLikes(isLiked? likes - 1 : likes + 1);
+        setIsLiked(!isLiked);
+    }
+
   return (
     <Container>
         <Wrapper>
             <Top>
                 <TopLeft>
-                    <Link to={`/profile`}>
-                        <ProfileImg src="https://i.pinimg.com/originals/38/b4/b1/38b4b15a7f7c388ceca48cae04231be1.png"/>
+                    <Link to={`/profile/${author.username}`}>
+                        <ProfileImg src={author.profilePicture}/>
                     </Link>
-                    <ProfileUsername>Shinya Kogami</ProfileUsername>
+                    <ProfileUsername>{author.username}</ProfileUsername>
                     <ProfileDate>{format(post.createdAt)}</ProfileDate>
                 </TopLeft>
                 <TopRight>
@@ -109,14 +142,14 @@ const Post = ({post}) => {
             </Center>
             <Bottom>
                 <BottomLeft>
-                    <LikeIcon src="https://www.pngitem.com/pimgs/m/71-715538_reddit-arrow-transparent-background-reddit-upvote-icon-hd.png"/>
+                    <LikeIcon onClick={handleLike} src="https://www.pngitem.com/pimgs/m/71-715538_reddit-arrow-transparent-background-reddit-upvote-icon-hd.png"/>
                     <LikeCounter>
-                        3 people like this
+                        {likes} people like this
                     </LikeCounter>
                 </BottomLeft>
                 <BottomRight>
                     <PostCategory>
-                        Anime
+                        {post.category}
                     </PostCategory>
                 </BottomRight>
             </Bottom>

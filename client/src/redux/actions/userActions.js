@@ -41,7 +41,7 @@ export const register = (userInfo) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: "REGISER_FAILURE",
-      payload: error.response.data.messsage,
+      payload: err.response.data.messsage,
     });
   }
 };

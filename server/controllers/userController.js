@@ -171,3 +171,20 @@ exports.unfollowCategory = async (req, res) => {
     });
   }
 };
+
+//Get all followers of an user
+exports.getFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const followers = user.followers;
+
+    res.status(200).json({
+      followers,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error while fetching followers",
+      err,
+    });
+  }
+};

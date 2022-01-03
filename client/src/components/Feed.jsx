@@ -1,21 +1,10 @@
 import React,{useState,useEffect} from 'react'
+import {useDispatch,useSelector} from 'react-redux'
 import styled from 'styled-components'
 
 import Post from './Post'
-
-const posts = [
-  {_id:"61ce73044c12eda57d22d049",userId:"61ce58856b1ce776268cfb70",review:"Strong and gripping. Consistent story flow and engaging background music keeps the viewers gripped to the story from the first shot. One of the better shows of the year. (4/5)",img:"https://meltingpotsandothercalamities.files.wordpress.com/2017/07/img_8961.jpg","likes":[],"categoryId":"61ce60b6452534caa7fc00e7","__v":0,createdAt
-  :
-  "2021-12-31T01:40:49.406Z"},
-  {_id:"61ce73044c12eda57d22d048",userId:"61ce58856b1ce776268cfb70",review:"Strong and gripping. Consistent story flow and engaging background music keeps the viewers gripped to the story from the first shot. One of the better shows of the year. (4/5)",img:"https://meltingpotsandothercalamities.files.wordpress.com/2017/07/img_8961.jpg","likes":[],"categoryId":"61ce60b6452534caa7fc00e7","__v":0,createdAt:"2021-12-31T01:40:49.406Z"
-  },
-  {_id:"61ce73044c12eda57d22d047",userId:"61ce58856b1ce776268cfb70",review:"Strong and gripping. Consistent story flow and engaging background music keeps the viewers gripped to the story from the first shot. One of the better shows of the year. (4/5)",img:"https://meltingpotsandothercalamities.files.wordpress.com/2017/07/img_8961.jpg","likes":[],"categoryId":"61ce60b6452534caa7fc00e7","__v":0,createdAt
-  :
-  "2021-12-31T01:40:49.406Z"},
-  {_id:"61ce73044c12eda57d22d046",userId:"61ce58856b1ce776268cfb70",review:"Strong and gripping. Consistent story flow and engaging background music keeps the viewers gripped to the story from the first shot. One of the better shows of the year. (4/5)",img:"https://meltingpotsandothercalamities.files.wordpress.com/2017/07/img_8961.jpg","likes":[],"categoryId":"61ce60b6452534caa7fc00e7","__v":0,createdAt
-  :
-  "2021-12-31T01:40:49.406Z"}
-]
+import Loading from './Loading'
+import AddPost from './AddPost'
 
 const Container = styled.div`
 flex:6;
@@ -27,15 +16,34 @@ const Wrapper = styled.div`
 padding:20px;
 `
 
-const Feed = () => {
+const Feed = ({username}) => {
+  const dispatch = useDispatch();
+  const {loading,posts} = useSelector((state) => state.posts)
+  const {user} = useSelector((state) => state.user)
+
+  const fetchPosts = () => {
+    if(username)
+    dispatch(profilePosts(username))
+    else
+    dispatch(feedPosts(user._id))
+  }
+
+  useEffect(() => {
+    fetchPosts();
+  },[user._id,username])
+
   return (
    <Container>
      <Wrapper>
-       <h2 style={{textAlign:"center"}}>Create Post</h2>
+      <AddPost/>
        {
-         posts.map((post) => (
-           <Post key={post._id} post={post}/>
-         ))
+         loading?(
+           <Loading/>
+         ):(
+          posts.map((post) => (
+            <Post key={post._id} post={post}/>
+          ))
+         )
        }
      </Wrapper>
    </Container>

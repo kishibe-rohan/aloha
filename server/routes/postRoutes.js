@@ -8,10 +8,12 @@ const {
   getPost,
   likePost,
   getFeedPosts,
+  getAllPosts,
 } = require("../controllers/postController");
 
 router.post("/new", createPost);
-router.get("/feed", getFeedPosts);
+router.get("/feed/:id", getFeedPosts);
+router.get("/profile/:username", getAllPosts);
 router.get("/:id", getPost);
 router.put("/:id", updatePost);
 router.delete("/:id", deletePost);

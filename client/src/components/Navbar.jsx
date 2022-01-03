@@ -1,4 +1,5 @@
 import React from 'react'
+import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom'
 import {Search,Person,Chat,Notifications} from '@material-ui/icons'
 import styled from 'styled-components'
@@ -86,6 +87,8 @@ cursor:pointer;
 `
 
 const Navbar = () => {
+    const {user} = useSelector((state) => state.user);
+
   return (
     <Container>
         <Left>
@@ -114,8 +117,8 @@ const Navbar = () => {
                     <IconBadge>1</IconBadge>
                 </IconItem>
             </Icons>
-            <Link to={`/profile`}>
-                <ProfileImg src="https://i.pinimg.com/originals/38/b4/b1/38b4b15a7f7c388ceca48cae04231be1.png" />
+            <Link to={`/profile/${user.username}`}>
+                <ProfileImg src={user.profilePicture} />
             </Link>
         </Right>
     </Container>

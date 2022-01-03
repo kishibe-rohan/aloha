@@ -1,4 +1,4 @@
-export const userReducer = (state = { user: {} }, action) => {
+export const userReducer = (state = { user: null }, action) => {
   switch (action.type) {
     case "LOGIN_REQUEST":
     case "REGISTER_REQUEST":
@@ -22,5 +22,8 @@ export const userReducer = (state = { user: {} }, action) => {
         user: null,
         error: action.payload,
       };
+
+    default:
+      return state;
   }
 };
