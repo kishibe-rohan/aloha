@@ -23,6 +23,38 @@ export const userReducer = (state = { user: null }, action) => {
         error: action.payload,
       };
 
+    case "FOLLOW_USER_SUCCESS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followings: [...state.user.followings, action.payload],
+        },
+      };
+
+    case "FOLLOW_USER_FAILURE":
+      return {
+        ...state,
+        error: action.payload,
+      };
+
+    case "UNFOLLOW_USER_SUCCESS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followings: state.user.followings.filter(
+            (following) => following != action.payload
+          ),
+        },
+      };
+
+    case "UNFOLLOW_USER_FAILURE":
+      return {
+        ...state,
+        error: action.payload,
+      };
+
     default:
       return state;
   }

@@ -25,7 +25,7 @@ const Logo = styled.div`
   font-size: 24px;
   margin-left: 20px;
   font-weight: bold;
-  color: white;
+  color: #1775ee;
   cursor: pointer;
 `
 const Center = styled.div`
@@ -93,7 +93,7 @@ const Navbar = () => {
     <Container>
         <Left>
             <Link to="/" style={{textDecoration:"none"}}>
-                <Logo>ALOHA</Logo>
+                <Logo>Aloha</Logo>
             </Link>
         </Left>
         <Center>

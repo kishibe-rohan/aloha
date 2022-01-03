@@ -99,25 +99,24 @@ const Login = () => {
     const {error,loading,user} = useSelector((state) => state.user);
 
     const [isLogin,setIsLogin] = useState(true);
-    const [userDetails,setUserDetails] = useState({
-        email:'',
-        password:''
-    })
+    const [loginEmail,setLoginEmail] = useState('')
+    const [loginPassword,setLoginPassword] = useState('')
+
+    const [registerUsername,setRegisterUsername] = useState('')
+    const [registerEmail,setRegisterEmail] = useState('')
+    const [registerPassword,setRegisterPassword] = useState('')
+
+
 
     const handleLogin = (e) => {
         e.preventDefault();
-        dispatch(login(userDetails))
+        //console.log(userDetails);
+        dispatch(login(loginEmail,loginPassword))
     }
 
     const handleRegister = (e) => {
         e.preventDefault();
-        dispatch(register(userDetails));
-    }
-
-    const handleChange = (e) => {
-        setUserDetails({
-            ...user,[e.target.name]:e.target.value
-        })
+        dispatch(register(registerUsername,registerEmail,registerPassword));
     }
 
     const toggleStatus = (e) => {
@@ -139,8 +138,8 @@ const Login = () => {
                 {
                     isLogin? (
                         <LoginBox onSubmit={handleLogin}>
-                    <LoginInput placeholder="Email" type="email" required onChange={(e) => handleChange(e)}/>
-                    <LoginInput placeholder="Password" type="password" required onChange={(e) => handleChange(e)}/>
+                    <LoginInput placeholder="Email" type="email" required onChange={(e) => setLoginEmail(e.target.value)}/>
+                    <LoginInput placeholder="Password" type="password" required onChange={(e) => setLoginPassword(e.target.value)}/>
                     <LoginButton type="submit" disabled={loading}>
                       {
                           loading?(
@@ -154,9 +153,9 @@ const Login = () => {
                 </LoginBox>
                     ): (
                         <LoginBox onSubmit={handleRegister}>
-                    <LoginInput placeholder="Username" type="text" required onChange={(e) => handleChange(e)}/>
-                    <LoginInput placeholder="Email" type="email" required onChange={(e) => handleChange(e)}/>
-                    <LoginInput placeholder="Password" type="password" required onChange={(e) => handleChange(e)}/>
+                    <LoginInput placeholder="Username" type="text" required onChange={(e) => setRegisterUsername(e.target.value)}/>
+                    <LoginInput placeholder="Email" type="email" required onChange={(e) => setRegisterEmail(e.target.value)}/>
+                    <LoginInput placeholder="Password" type="password" required onChange={(e) => setRegisterPassword(e.target.password)}/>
                     <LoginButton type="submit" disabled={loading}>
                       {
                           loading?(

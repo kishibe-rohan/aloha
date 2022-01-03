@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
+import {profilePosts,feedPosts} from '../redux/actions/postActions'
 import styled from 'styled-components'
 
 import Post from './Post'
@@ -18,14 +19,22 @@ padding:20px;
 
 const Feed = ({username}) => {
   const dispatch = useDispatch();
-  const {loading,posts} = useSelector((state) => state.posts)
+  const [posts,setPosts] = useState([]);
+  const {loading,feedPosts:feed,profilePosts:profile} = useSelector((state) => state.posts)
   const {user} = useSelector((state) => state.user)
 
   const fetchPosts = () => {
     if(username)
-    dispatch(profilePosts(username))
+    {
+      dispatch(profilePosts(username))
+      setPosts(profile);
+    }
+    
     else
-    dispatch(feedPosts(user._id))
+    {
+      dispatch(feedPosts(user._id))
+      setPosts(feed)
+    }
   }
 
   useEffect(() => {
@@ -35,7 +44,7 @@ const Feed = ({username}) => {
   return (
    <Container>
      <Wrapper>
-      <AddPost/>
+      {/*<AddPost/>*/}
        {
          loading?(
            <Loading/>

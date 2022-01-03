@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useState,useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
+import {followUser,unfollowUser} from '../redux/actions/userActions'
 
 import { Add, Remove } from "@material-ui/icons";
 import styled from 'styled-components'
@@ -136,22 +137,18 @@ margin-top: 30px;
 
 const Rightbar = ({user}) => {
   const dispatch = useDispatch();
-  const {isLoading,loading,user:currentUser,friends} = useSelector((state) => state.user)
+  const {isLoading,loading,user:currentUser} = useSelector((state) => state.user)
   const [followed, setFollowed] = useState(
-    currentUser.followings.includes(user?.id)
+    currentUser.followings.includes(user?._id)
   );
-
-  useEffect(() => {
-    dispatch(fetchFriends());
-  },[user])
 
   const handleClick = () => {
       try{
         if(followed)
         {
-          dispatch(unfollowUser(currentUser._id))
+          dispatch(unfollowUser(user._id,currentUser._id))
         }else{
-          dispatch(followUser(currentUser._id))
+          dispatch(followUser(user._id,currentUser._id))
         }
 
         setFollowed(followed => !followed)
@@ -178,8 +175,8 @@ const Rightbar = ({user}) => {
         </FriendListTitle>
         <FriendList>
            {
-             friends.map((user) => {
-               <Online key={user.id} user={user}/>
+             currentUser.followers.map((friend) => {
+               <Online key={friend._id} userInfo={friend}/>
              })
            }
         </FriendList>
@@ -212,7 +209,7 @@ const Rightbar = ({user}) => {
 
       <RightbarTitle>User Followers</RightbarTitle>
       <RightbarFollowings>
-        {friends.map((friend) => (
+        {user.followers.map((friend) => (
           <Link to={`/profile`+ friend.username}  style={{ textDecoration: "none" }}>
             <RightbarFollowing>
               <RightbarFollowingImg src={friend.profilePicture}/>

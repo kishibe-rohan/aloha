@@ -30,6 +30,8 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     //check if the email entered belongs to an user
+    console.log(req.body.email);
+    console.log(req.body.password);
     const user = await User.findOne({ email: req.body.email });
     !user && res.status(404).json("User Not Found");
 
