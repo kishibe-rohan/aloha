@@ -7,6 +7,8 @@ const helmet = require("helmet");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const categoryRoute = require("./routes/categoryRoutes");
+const messageRoute = require("./routes/messageRoutes");
+const conversationRoute = require("./routes/conversationRoutes");
 
 //Connect to DB
 dotenv.config();
@@ -28,6 +30,8 @@ app.use(helmet());
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/conversation", conversationRoute);
+app.use("/api/message", messageRoute);
 
 //Start Server
 app.listen(process.env.PORT, () => {
