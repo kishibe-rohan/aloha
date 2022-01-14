@@ -45,9 +45,15 @@ const Sidebar = () => {
   const [categories,setCategories] = useState([]);
 
  useEffect(() => {
-   const res = await axios.get('/category/all');
-   setCategories(res.data);
+
+  const fetchCategories = async() => {
+    const res = await axios.get('/category/all');
+    setCategories(res.data);
+  }
+
+  fetchCategories();
    
+
  },[])
 
   return (

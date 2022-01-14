@@ -144,10 +144,10 @@ const Rightbar = ({user}) => {
   const {user:currentUser,dispatch,isFetching} = useContext(AuthContext)
   
   const [followed, setFollowed] = useState(
-    currentUser.followings.includes(user?._id)
+    currentUser?.followings?.includes(user?._id)
   );
 
-  const handleClick = () => {
+  const handleClick = async() => {
       try{
         if(followed)
         {
@@ -211,8 +211,8 @@ const Rightbar = ({user}) => {
           </FriendListTitle>
           <FriendList>
             {
-              currentUser.followings.map((friend) => (
-                <Online key={friend._id} userInfo={friend}/>
+              currentUser?.followings?.map((friend) => (
+                <Online key={friend._id} user={friend}/>
               ))
             }
           </FriendList>

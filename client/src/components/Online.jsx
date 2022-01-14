@@ -1,5 +1,7 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import styled from 'styled-components'
+
+import axios from 'axios';
 
 const Container = styled.div`
     display: flex;
@@ -36,16 +38,27 @@ color:white;
 `
 
 const Online = ({user}) => {
-  console.log(user);
+  //console.log(user);
+
+  const [friend,setFriend] = useState({});
+  useEffect(() => {
+    const getProfile = async() => {
+        const res = await axios.get(`/users?userId=${user}`)
+        console.log(res);
+        setFriend(res.data);
+    }
+
+    getProfile();
+  },[user])
 
   return (
     <Container>
         <ImgContainer>
-        <ProfileImg src={user.profilePicture}/>
+        <ProfileImg src={friend?.profilePicture? friend.profilePicture:"../assets/profile.png"}/>
         <OnlineIcon/>
         </ImgContainer>
         <ProfileUsername>
-            {user.username}
+            {friend?.username}
         </ProfileUsername>
     </Container>
   )

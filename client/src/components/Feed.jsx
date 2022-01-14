@@ -36,7 +36,7 @@ const Feed = ({username}) => {
   return (
    <Container>
      <Wrapper>
-      {/*<AddPost/>*/}
+     {(!username || username === user.username) && <AddPost/>}
        {
          isFetching?(
            <Loading/>

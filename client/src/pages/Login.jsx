@@ -1,7 +1,9 @@
 import React,{useState,useContext} from 'react'
-import { loginCall,registerCall } from "../../apiCalls";
+import { loginCall,registerCall } from "../apiCalls";
 import { CircularProgress } from "@material-ui/core";
 import styled from 'styled-components'
+
+import {AuthContext} from '../context/AuthContext'
 
 const Container = styled.div`
   width: 100vw;
@@ -145,9 +147,9 @@ const Login = () => {
                         <LoginBox onSubmit={handleLogin}>
                     <LoginInput placeholder="Email" type="email" required onChange={(e) => setLoginEmail(e.target.value)}/>
                     <LoginInput placeholder="Password" type="password" required onChange={(e) => setLoginPassword(e.target.value)}/>
-                    <LoginButton type="submit" disabled={loading}>
+                    <LoginButton type="submit" disabled={isFetching}>
                       {
-                          loading?(
+                          isFetching?(
                               <CircularProgress color="inherit" size="20px"/>
                           ):("Log In")
                       }
@@ -163,9 +165,9 @@ const Login = () => {
                     <LoginInput placeholder="Password" type="password" required onChange={(e) => setRegisterPassword(e.target.value)}/>
                     <LoginInput placeholder="From" type="text" required onChange={(e) => setUserFrom(e.target.value)}/>
                     <LoginInput placeholder="Fav Genre" type="text" required onChange={(e) => setUserGenre(e.target.value)}/>
-                    <LoginButton type="submit" disabled={loading}>
+                    <LoginButton type="submit" disabled={isFetching}>
                       {
-                          loading?(
+                          isFetching?(
                               <CircularProgress color="white" size="20px"/>
                           ):("Sign Up")
                       }

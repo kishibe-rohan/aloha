@@ -8,9 +8,9 @@ const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const categoryRoute = require("./routes/categoryRoutes");
 
+//Connect to DB
 dotenv.config();
 
-//Connect to DB
 mongoose
   .connect(process.env.MONGO_URI)
   .then((data) => {

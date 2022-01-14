@@ -83,8 +83,8 @@ useEffect(() => {
        <ProfileRight>
            <ProfileRightTop>
                <ProfileCover>
-                   <ProfileCoverImg src={user.coverPicture?user.coverPicture:"../assets/profile.png"} />
-                   <ProfileImg src={user.profilePicture?user.profilePicture: "../assets/cover.png"} />
+                   <ProfileCoverImg src={user.coverPicture?user.coverPicture:"../assets/cover.png"} alt=""/>
+                   <ProfileImg src={user.profilePicture?user.profilePicture: "../assets/profile.png"} alt=""  />
                </ProfileCover>
                <ProfileInfo>
                    <ProfileInfoName>{user?.username}</ProfileInfoName>

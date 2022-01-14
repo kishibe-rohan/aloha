@@ -5,7 +5,7 @@ import {format} from 'timeago.js'
 import styled from 'styled-components'
 
 import axios from 'axios'
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 import LikeImg from '../assets/like.png'
 
