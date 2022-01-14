@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import {useParams} from 'react-router'
+import axios from 'axios';
 
 import {Navbar,Sidebar,Feed,Rightbar} from '../components'
 import styled from 'styled-components'
@@ -59,6 +60,21 @@ display:flex;
 
 
 const Profile = () => {
+
+    const [user,setUser] = useState({});
+    const username = useParams().username;
+
+useEffect(() => {
+   //console.log(username);
+   const fetchUser = async() => {
+       const res = await axios.get(`/users?username=${username}`);
+       //console.log(res.data);
+       setUser(res.data)
+   }
+
+   fetchUser();
+},[username])
+
   return (
    <>
    <Navbar/>
@@ -67,17 +83,17 @@ const Profile = () => {
        <ProfileRight>
            <ProfileRightTop>
                <ProfileCover>
-                   <ProfileCoverImg src="https://wallpapercave.com/wp/O0rSWxg.jpg" />
-                   <ProfileImg src="https://i.pinimg.com/originals/05/d7/76/05d77621c5371ed2b6bdba84091927dc.png" />
+                   <ProfileCoverImg src={user.coverPicture?user.coverPicture:"../assets/profile.png"} />
+                   <ProfileImg src={user.profilePicture?user.profilePicture: "../assets/cover.png"} />
                </ProfileCover>
                <ProfileInfo>
-                   <ProfileInfoName>Shinya Kogami</ProfileInfoName>
-                   <ProfileInfoBio>Bimbo E-boy</ProfileInfoBio>
+                   <ProfileInfoName>{user?.username}</ProfileInfoName>
+                   <ProfileInfoBio>{user?.bio}</ProfileInfoBio>
                </ProfileInfo>
            </ProfileRightTop>
            <ProfileRightBottom>
-               <Feed />
-               <Rightbar />
+               <Feed username={username}/>
+               <Rightbar user={user}/>
            </ProfileRightBottom>
        </ProfileRight>
    </Container>

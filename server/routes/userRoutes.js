@@ -13,7 +13,7 @@ const {
 
 router.post("/register", register);
 router.post("/login", login);
-router.get("/:id", getUser);
+router.get("/", getUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.put("/follow/:id", followUser);

@@ -47,6 +47,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       maxLength: [50, "Bio cannot exceed 50 chars"],
     },
+    from: {
+      type: String,
+    },
+    genre: {
+      type: String,
+    },
   },
   {
     timestamps: true,

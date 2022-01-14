@@ -1,7 +1,5 @@
-import React,{useState} from 'react'
-import {useDispatch,useSelector} from 'react-redux'
-import {login,register} from '../redux/actions/userActions'
-
+import React,{useState,useContext} from 'react'
+import { loginCall,registerCall } from "../../apiCalls";
 import { CircularProgress } from "@material-ui/core";
 import styled from 'styled-components'
 
@@ -95,9 +93,7 @@ color: white;
 `
 
 const Login = () => {
-    const dispatch = useDispatch();
-    const {error,loading,user} = useSelector((state) => state.user);
-
+    const {isFetching,dispatch} = useContext(AuthContext)
     const [isLogin,setIsLogin] = useState(true);
     const [loginEmail,setLoginEmail] = useState('')
     const [loginPassword,setLoginPassword] = useState('')
@@ -105,18 +101,27 @@ const Login = () => {
     const [registerUsername,setRegisterUsername] = useState('')
     const [registerEmail,setRegisterEmail] = useState('')
     const [registerPassword,setRegisterPassword] = useState('')
+    const [userFrom,setUserFrom] = useState('')
+    const [userGenre,setUserGenre] = useState('')
+
 
 
 
     const handleLogin = (e) => {
         e.preventDefault();
         //console.log(userDetails);
-        dispatch(login(loginEmail,loginPassword))
+        loginCall(
+            {email:loginEmail,password:loginPassword},
+            dispatch
+        )
     }
 
     const handleRegister = (e) => {
         e.preventDefault();
-        dispatch(register(registerUsername,registerEmail,registerPassword));
+        registerCall(
+            {username:registerUsername,email:registerEmail,password:registerPassword,from:userFrom,genre:userGenre},
+            dispatch
+        )
     }
 
     const toggleStatus = (e) => {
@@ -143,7 +148,7 @@ const Login = () => {
                     <LoginButton type="submit" disabled={loading}>
                       {
                           loading?(
-                              <CircularProgress color="white" size="20px"/>
+                              <CircularProgress color="inherit" size="20px"/>
                           ):("Log In")
                       }
                     </LoginButton>
@@ -155,7 +160,9 @@ const Login = () => {
                         <LoginBox onSubmit={handleRegister}>
                     <LoginInput placeholder="Username" type="text" required onChange={(e) => setRegisterUsername(e.target.value)}/>
                     <LoginInput placeholder="Email" type="email" required onChange={(e) => setRegisterEmail(e.target.value)}/>
-                    <LoginInput placeholder="Password" type="password" required onChange={(e) => setRegisterPassword(e.target.password)}/>
+                    <LoginInput placeholder="Password" type="password" required onChange={(e) => setRegisterPassword(e.target.value)}/>
+                    <LoginInput placeholder="From" type="text" required onChange={(e) => setUserFrom(e.target.value)}/>
+                    <LoginInput placeholder="Fav Genre" type="text" required onChange={(e) => setUserGenre(e.target.value)}/>
                     <LoginButton type="submit" disabled={loading}>
                       {
                           loading?(

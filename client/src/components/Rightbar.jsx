@@ -1,12 +1,16 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect,useContext } from 'react'
 import {Link} from 'react-router-dom'
-import {useSelector,useDispatch} from 'react-redux'
-import {followUser,unfollowUser} from '../redux/actions/userActions'
+
+import axios from 'axios'
+import {AuthContext} from '../context/AuthContext'
 
 import { Add, Remove } from "@material-ui/icons";
 import styled from 'styled-components'
 
 import Online from './Online';
+import Loading from './Loading'
+
+import CalendarIcon from '../assets/calendar.png'
 
 /*
 const users = [
@@ -82,7 +86,7 @@ margin-bottom: 10px;
 const RightbarInfoKey = styled.span` 
 font-weight: 500;
   margin-right: 15px;
-  color: blue;
+  color: #1775ee;
 `
 
 const RightbarInfoValue = styled.span` 
@@ -136,8 +140,9 @@ margin-top: 30px;
 
 
 const Rightbar = ({user}) => {
-  const dispatch = useDispatch();
-  const {isLoading,loading,user:currentUser} = useSelector((state) => state.user)
+  const [friends,setFriends] = useState([]);
+  const {user:currentUser,dispatch,isFetching} = useContext(AuthContext)
+  
   const [followed, setFollowed] = useState(
     currentUser.followings.includes(user?._id)
   );
@@ -146,40 +151,75 @@ const Rightbar = ({user}) => {
       try{
         if(followed)
         {
-          dispatch(unfollowUser(user._id,currentUser._id))
+          await axios.post(`/users/unfollow/${user._id}`,{
+            userId: currentUser._id
+          })
+          dispatch({
+            type:"UNFOLLOW",
+            payload:user._id
+          })
         }else{
-          dispatch(followUser(user._id,currentUser._id))
+          await axios.post(`/users/follow/${user._id}`,{
+            userId: currentUser._id
+          })
+          dispatch({
+            type:"FOLLOW",
+            payload:user._id
+          })
         }
 
         setFollowed(followed => !followed)
       }
       catch(err)
       {
-
+         console.log(err)
       }
   }
+
+  useEffect(() => {
+    const getFollowers = async() => {
+      try{
+        const friendList = await axios.get(`/users/followers/${user._id}`);
+        setFriends(friendList.data);
+      }catch(err)
+      {
+        console.log(err);
+      }
+    }
+
+    getFollowers();
+  },[user])
 
   const HomeRightbar = () => {
     return (
       <>
+      {
+        isFetching?(
+          <Loading/>
+        ):
+        (
+          <>
+          <PromoContainer>
+            <PromoImg src={CalendarIcon}/>
+            <PromoText>
+              <b>Jersey</b> and <b>3 other movies</b> releasing this weekend
+            </PromoText>
+          </PromoContainer>
+          <AdImg src="https://m.media-amazon.com/images/M/MV5BYzRjNzQ0YzYtYWRhZC00ZjgwLWFjNTktZjk3N2MwZjJhNTgxXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg"/>
+          <FriendListTitle> 
+                Online 
+          </FriendListTitle>
+          <FriendList>
+            {
+              currentUser.followings.map((friend) => (
+                <Online key={friend._id} userInfo={friend}/>
+              ))
+            }
+          </FriendList>
+          </>
+        )
+      }
       
-        <PromoContainer>
-          <PromoImg src="https://www.kindpng.com/picc/m/86-863785_calendar-vector-icon-png-www-pixshark-com-images.png"/>
-          <PromoText>
-            <b>Jersey</b> and <b>3 other movies</b> releasing this weekend
-          </PromoText>
-        </PromoContainer>
-        <AdImg src="https://m.media-amazon.com/images/M/MV5BYzRjNzQ0YzYtYWRhZC00ZjgwLWFjNTktZjk3N2MwZjJhNTgxXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg"/>
-        <FriendListTitle> 
-              Online 
-        </FriendListTitle>
-        <FriendList>
-           {
-             currentUser.followers.map((friend) => {
-               <Online key={friend._id} userInfo={friend}/>
-             })
-           }
-        </FriendList>
   
       </>
     )
@@ -188,7 +228,10 @@ const Rightbar = ({user}) => {
   const ProfileRightbar = () => {
     return(
       <>
-      {user.username !== currentUser.username && (
+      {
+        isFetching?(<Loading/>):(
+          <>
+          {user?.username !== currentUser.username && (
         <RightbarFollowButton onClick={handleClick}>
           {followed?"Unfollow":"Follow"}
           {followed?<Remove/>:<Add/>}
@@ -199,18 +242,18 @@ const Rightbar = ({user}) => {
       <RightbarInfo>
         <RightbarInfoItem>
           <RightbarInfoKey>From:</RightbarInfoKey>
-          <RightbarInfoValue>{user.from}</RightbarInfoValue>
+          <RightbarInfoValue>{user?.from}</RightbarInfoValue>
         </RightbarInfoItem>
         <RightbarInfoItem>
           <RightbarInfoKey>Fav Genre:</RightbarInfoKey>
-          <RightbarInfoValue>{user.genre}</RightbarInfoValue>
+          <RightbarInfoValue>{user?.genre}</RightbarInfoValue>
         </RightbarInfoItem>
       </RightbarInfo>
 
       <RightbarTitle>User Followers</RightbarTitle>
       <RightbarFollowings>
-        {user.followers.map((friend) => (
-          <Link to={`/profile`+ friend.username}  style={{ textDecoration: "none" }}>
+        {friends.map((friend) => (
+          <Link to={`/profile/`+ friend.username}  style={{ textDecoration: "none" }}>
             <RightbarFollowing>
               <RightbarFollowingImg src={friend.profilePicture}/>
               <RightbarFollowingName>{friend.username}</RightbarFollowingName>
@@ -218,6 +261,10 @@ const Rightbar = ({user}) => {
           </Link>
         ))}
       </RightbarFollowings>
+          </>
+        )
+      }
+      
       </>
     )
   }

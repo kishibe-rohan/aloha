@@ -1,5 +1,5 @@
-import React from 'react'
-import {useSelector} from 'react-redux';
+import React,{useContext} from 'react'
+import {AuthContext} from '../context/AuthContext'
 import {Link} from 'react-router-dom'
 import {Search,Person,Chat,Notifications} from '@material-ui/icons'
 import styled from 'styled-components'
@@ -87,7 +87,8 @@ cursor:pointer;
 `
 
 const Navbar = () => {
-    const {user} = useSelector((state) => state.user);
+    
+    const {user} = useContext(AuthContext)
 
   return (
     <Container>
@@ -117,9 +118,12 @@ const Navbar = () => {
                     <IconBadge>1</IconBadge>
                 </IconItem>
             </Icons>
-            <Link to={`/profile/${user.username}`}>
-                <ProfileImg src={user.profilePicture} />
-            </Link>
+            {user && 
+             <Link to={`/profile/${user.username}`}>
+             <ProfileImg src={user.profilePicture ? user.profilePicture : "../assets/profile.png"} />
+         </Link>
+         }
+           
         </Right>
     </Container>
   )

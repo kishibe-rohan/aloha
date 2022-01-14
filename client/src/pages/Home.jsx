@@ -10,7 +10,7 @@ width:100%;
 const Home = () => {
   return (
     <>
-    <Navbar/>
+    <Navbar />
     <Container>
         <Sidebar/>
         <Feed/>

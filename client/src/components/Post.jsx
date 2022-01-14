@@ -1,11 +1,13 @@
-import React,{useState,useEffect} from 'react'
-import {useSelector,useDispatch} from 'react-redux';
+import React,{useState,useEffect,useContext} from 'react'
 import {Link} from 'react-router-dom';
 import {MoreVert} from '@material-ui/icons'
 import {format} from 'timeago.js'
 import styled from 'styled-components'
 
 import axios from 'axios'
+import { AuthContext } from "../../context/AuthContext";
+
+import LikeImg from '../assets/like.png'
 
 const Container = styled.div`
 width: 100%;
@@ -94,7 +96,8 @@ const Post = ({post}) => {
     const [likes,setLikes] = useState(post.likes.length);
     const [isLiked,setIsLiked] = useState(false);
     const [author,setAuthor] = useState({});
-    const {user} = useSelector((state) => state.user);
+    const [categoryName,setCategoryName] = useState('');
+    const {user} = useContext(AuthContext)
 
     useEffect(() => {
         setIsLiked(post.likes.includes(user._id))
@@ -103,15 +106,26 @@ const Post = ({post}) => {
     useEffect(() => {
         const fetchAuthor = async() => {
             const res = await axios.get(`/users?userId=${post.userId}`)
+           // console.log(res);
             setAuthor(res.data);
         }
 
         fetchAuthor();
-    },[post.userId])
 
+        const fetchCategory = async() => {
+            const res = await axios.get(`/category/${post.categoryId}`)
+           // console.log(res);
+            setCategoryName(res.data.name);
+        }
+
+        fetchCategory();
+    },[post.userId,post.categoryId])
+
+   
     const handleLike = () => {
         try{
-            axios.put('/posts' + post._id + '/like',{userId: user._id})
+            axios.put(`/posts/${post._id}/like`,{userId: user._id})
+           // console.log('Liked');
         }catch(err)
         {
            console.log(err); 
@@ -126,10 +140,10 @@ const Post = ({post}) => {
         <Wrapper>
             <Top>
                 <TopLeft>
-                    <Link to={`/profile/${author.username}`}>
-                        <ProfileImg src={author.profilePicture}/>
+                    <Link to={`/profile/${author?.username}`}>
+                        <ProfileImg src={author.profilePicture?author.profilePicture:"../assets/profile.png"}/>
                     </Link>
-                    <ProfileUsername>{author.username}</ProfileUsername>
+                    <ProfileUsername>{author?.username}</ProfileUsername>
                     <ProfileDate>{format(post.createdAt)}</ProfileDate>
                 </TopLeft>
                 <TopRight>
@@ -138,18 +152,18 @@ const Post = ({post}) => {
             </Top>
             <Center>
                 <PostText>{post.review}</PostText>
-                <PostImg src={post.img}/>
+                {post.img && <PostImg src={post.img}/>}
             </Center>
             <Bottom>
                 <BottomLeft>
-                    <LikeIcon onClick={handleLike} src="https://www.pngitem.com/pimgs/m/71-715538_reddit-arrow-transparent-background-reddit-upvote-icon-hd.png"/>
+                    <LikeIcon onClick={handleLike} src={LikeImg}/>
                     <LikeCounter>
                         {likes} people like this
                     </LikeCounter>
                 </BottomLeft>
                 <BottomRight>
                     <PostCategory>
-                        {post.category}
+                       {categoryName}
                     </PostCategory>
                 </BottomRight>
             </Bottom>

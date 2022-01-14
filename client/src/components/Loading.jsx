@@ -4,7 +4,7 @@ import styled,{keyframes} from 'styled-components'
 const Loader = styled.div` 
 width:100vw;
 height:100vh;
-bacgkround-color:#16161d;
+background-color:#16161d;
 display:grid;
 place-items:center;
 max-width:100%;

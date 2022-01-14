@@ -6,10 +6,7 @@ exports.createPost = async (req, res) => {
   try {
     const newPost = new Post(req.body);
     const savedPost = await newPost.save();
-    res.status(201).json({
-      message: "Post added successfully",
-      savedPost,
-    });
+    res.status(201).json(savedPost);
   } catch (err) {
     res.status(500).json({
       message: "Error adding post",
@@ -27,9 +24,7 @@ exports.updatePost = async (req, res) => {
         $set: req.body,
       });
 
-      res.status(200).json({
-        message: "Post updated successfully",
-      });
+      res.status(200).json("Post updated successfully");
     } else {
       res.status(200).json({
         message: "Unauthorized user",
@@ -49,9 +44,7 @@ exports.deletePost = async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (post.user.id === req.body.userId) {
       await post.deleteOne();
-      res.status(200).json({
-        message: "Post has been deleted",
-      });
+      res.status(200).json("Post has been deleted");
     } else {
       res.status(403).json({
         message: "Unauthorized user",
@@ -85,6 +78,7 @@ exports.likePost = async (req, res) => {
         $push: { likes: req.body.userId },
       });
 
+      console.log("Liked");
       res.status(200).json({
         message: "Post liked successfully",
       });

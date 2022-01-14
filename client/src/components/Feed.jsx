@@ -1,11 +1,12 @@
-import React,{useState,useEffect} from 'react'
-import {useDispatch,useSelector} from 'react-redux'
-import {profilePosts,feedPosts} from '../redux/actions/postActions'
+import React,{useState,useEffect,useContext} from 'react'
 import styled from 'styled-components'
 
 import Post from './Post'
 import Loading from './Loading'
 import AddPost from './AddPost'
+
+import axios from 'axios'
+import {AuthContext} from '../context/AuthContext'
 
 const Container = styled.div`
 flex:6;
@@ -18,40 +19,31 @@ padding:20px;
 `
 
 const Feed = ({username}) => {
-  const dispatch = useDispatch();
   const [posts,setPosts] = useState([]);
-  const {loading,feedPosts:feed,profilePosts:profile} = useSelector((state) => state.posts)
-  const {user} = useSelector((state) => state.user)
-
-  const fetchPosts = () => {
-    if(username)
-    {
-      dispatch(profilePosts(username))
-      setPosts(profile);
-    }
-    
-    else
-    {
-      dispatch(feedPosts(user._id))
-      setPosts(feed)
-    }
-  }
+  const {isFetching,user} = useContext(AuthContext);
 
   useEffect(() => {
+    const fetchPosts = async() => {
+      const res = username? await axios.get(`/posts/profile/${username}`): await axios.get(`/posts/feed/${user._id}`)
+      setPosts(res.data.sort((p1,p2) => {
+        return new Date(p2.createdAt) - new Date(p1.createdAt)
+      }))
+    }
+
     fetchPosts();
-  },[user._id,username])
+  },[username,user._id])
 
   return (
    <Container>
      <Wrapper>
       {/*<AddPost/>*/}
        {
-         loading?(
+         isFetching?(
            <Loading/>
          ):(
-          posts.map((post) => (
-            <Post key={post._id} post={post}/>
-          ))
+           posts.map((p) => (
+             <Post key={p._id} post={p}/>
+           ))
          )
        }
      </Wrapper>

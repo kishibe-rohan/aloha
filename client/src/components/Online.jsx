@@ -35,16 +35,17 @@ font-weight: 500;
 color:white;
 `
 
-const Online = ({userInfo}) => {
-  console.log(userInfo);
+const Online = ({user}) => {
+  console.log(user);
+
   return (
     <Container>
         <ImgContainer>
-        <ProfileImg src={userInfo.profilePicture}/>
+        <ProfileImg src={user.profilePicture}/>
         <OnlineIcon/>
         </ImgContainer>
         <ProfileUsername>
-            {userInfo.username}
+            {user.username}
         </ProfileUsername>
     </Container>
   )

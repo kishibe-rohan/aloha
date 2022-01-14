@@ -4,10 +4,7 @@ const Category = require("../models/Category");
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
-    res.status(200).json({
-      message: "Success:",
-      categories,
-    });
+    res.status(200).json(categories);
   } catch (err) {
     res.status(500).json({
       message: "Error while fetching categories",
@@ -21,13 +18,23 @@ exports.addCategory = async (req, res) => {
     const newCategory = new Category(req.body);
     const savedCategory = await newCategory.save();
 
-    res.status(201).json({
-      message: "Created new category successfully",
-      savedCategory,
-    });
+    res.status(201).json(savedCategory);
   } catch (err) {
     res.status(500).json({
       message: "Error adding category",
+      err,
+    });
+  }
+};
+
+//Get Category
+exports.getCategory = async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    res.status(200).json(category);
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching category",
       err,
     });
   }

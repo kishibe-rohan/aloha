@@ -1,29 +1,27 @@
-export const userReducer = (state = { user: null }, action) => {
+const AuthReducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN_REQUEST":
-    case "REGISTER_REQUEST":
+    case "LOGIN_START":
+    case "REGISTER_START":
       return {
-        loading: true,
+        user: null,
+        isFetching: true,
+        error: false,
       };
-
     case "LOGIN_SUCCESS":
     case "REGISTER_SUCCESS":
       return {
-        ...state,
-        loading: false,
         user: action.payload,
+        isFetching: false,
+        error: false,
       };
-
     case "LOGIN_FAILURE":
     case "REGISTER_FAILURE":
       return {
-        ...state,
-        loading: false,
         user: null,
-        error: action.payload,
+        isFetching: false,
+        error: true,
       };
-
-    case "FOLLOW_USER_SUCCESS":
+    case "FOLLOW":
       return {
         ...state,
         user: {
@@ -31,31 +29,19 @@ export const userReducer = (state = { user: null }, action) => {
           followings: [...state.user.followings, action.payload],
         },
       };
-
-    case "FOLLOW_USER_FAILURE":
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case "UNFOLLOW_USER_SUCCESS":
+    case "UNFOLLOW":
       return {
         ...state,
         user: {
           ...state.user,
           followings: state.user.followings.filter(
-            (following) => following != action.payload
+            (following) => following !== action.payload
           ),
         },
       };
-
-    case "UNFOLLOW_USER_FAILURE":
-      return {
-        ...state,
-        error: action.payload,
-      };
-
     default:
       return state;
   }
 };
+
+export default AuthReducer;
