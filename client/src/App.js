@@ -10,6 +10,7 @@ import {
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Messenger from "./pages/Messenger";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -23,6 +24,10 @@ const App = () => {
         />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route exact path="/profile/:username" element={<Profile />} />
+        <Route
+          path="/messenger"
+          element={!user ? <Navigate to="/" /> : <Messenger />}
+        />
       </Routes>
     </Router>
   );

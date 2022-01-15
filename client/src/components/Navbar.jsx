@@ -111,7 +111,9 @@ const Navbar = () => {
                 </IconItem>
                 <IconItem>
                     <Chat/>
+                    <Link to={'/messenger'}>
                     <IconBadge>2</IconBadge>
+                    </Link>
                 </IconItem>
                 <IconItem>
                     <Notifications/>

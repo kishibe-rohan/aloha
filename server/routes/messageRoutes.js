@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-import { newMessage, getMessages } from "../controllers/messageController";
+const { newMessage, getMessages } = require("../controllers/messageController");
 
 router.post("/", newMessage);
 router.get("/:conversationId", getMessages);

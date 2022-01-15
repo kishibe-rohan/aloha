@@ -131,7 +131,7 @@ export default function Share() {
                            <input style={{borderRadius:"20px",backgroundColor:"#16161d",color:"white",border:"none"}} onChange={handleImage} placeholder="Paste Image Link"/>
                        </ShareOption>
                        <ShareOption>
-                           <select onChange={handleDropdownChange}>
+                           <select style={{backgroundColor:"#16161d",color:"white",border:"none"}} onChange={handleDropdownChange}>
                                {categories.map((c) => {
                                    return <option value={c._id}>{c.name}</option>
                                })}
