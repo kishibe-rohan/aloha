@@ -1,8 +1,9 @@
-import { useContext } from 'react'
+import { useContext,useState,useEffect } from 'react'
 import {format} from 'timeago.js'
 import styled from 'styled-components'
-import { useEffect } from 'react'
 
+
+import axios from 'axios'
 import {AuthContext} from '../context/AuthContext'
 
 const MessageSent = styled.div`
@@ -54,16 +55,27 @@ margin-top: 10px;
 
 
 export default function Message({message,own}){
-
-    
-    
+    const [receiver,setReceiver] = useState(null);
     const {user} = useContext(AuthContext);
+
+    useEffect(() => {
+        const getReceiver = async() => {
+            const {data} = await axios.get(`/conversation/members/${message.conversationId}`)
+           // console.log(data);
+            const notUser = data.filter((r) => r._id !== user._id)
+            setReceiver(notUser[0])
+        }
+
+        getReceiver();
+        
+       
+    },[message.conversationId])
 
     const MessageFriend = () => {
         return(
             <MessageReceived>
                 <MessageTop>
-                    <MessageImg src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"/>
+                    <MessageImg src={receiver?.profilePicture}/>
                     <MessageText>{message.text}</MessageText>
                 </MessageTop>
                 <MessageBottom>

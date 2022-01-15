@@ -8,7 +8,7 @@ const io = require("socket.io")(9000, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === user) &&
+  !users.some((user) => user.userId === userId) &&
     users.push({ userId, socketId });
 };
 

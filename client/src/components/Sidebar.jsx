@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from 'react'
+import {Link} from 'react-router-dom'
 import axios from 'axios';
 import styled from 'styled-components'
 
@@ -63,8 +64,10 @@ const Sidebar = () => {
         {
             categories && categories.map((category) => (
             <Item key={category._id}>
+              <Link style={{textDecoration:"none",color:"white"}} to ={`/category/${category._id}`} >
               <ItemIcon src={category.img}/>
               <ItemText>{category.name}</ItemText>
+              </Link>
             </Item>
           ))
         }

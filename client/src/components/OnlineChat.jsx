@@ -18,7 +18,8 @@ display: flex;
 const OnlineChatImgContainer = styled.div` position: relative;
 margin-right: 10px;`
 
-const OnlineChatImg = styled.img`  width: 40px;
+const OnlineChatImg = styled.img`  
+width: 40px;
 height: 40px;
 border-radius: 50%;
 object-fit: cover;
@@ -32,7 +33,9 @@ position: absolute;
 top: 2px;
 right: 2px;` 
 
-const OnlineChatName = styled.span``
+const OnlineChatName = styled.span`
+color:white;
+`
 
 export default function OnlineChat ({ onlineUsers, currentId, setCurrentChat }) {
    const [friends,setFriends] = useState([]);
@@ -49,6 +52,7 @@ export default function OnlineChat ({ onlineUsers, currentId, setCurrentChat }) 
 
    useEffect(() => {
        setOnlineFriends(friends.filter((f) => onlineUsers.includes(f._id)))
+      // console.log(onlineFriends);
    },[friends,onlineUsers])
 
    const handleClick = async(user) => {

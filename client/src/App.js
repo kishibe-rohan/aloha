@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Messenger from "./pages/Messenger";
+import Category from "./pages/Category";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -28,6 +29,7 @@ const App = () => {
           path="/messenger"
           element={!user ? <Navigate to="/" /> : <Messenger />}
         />
+        <Route path="/category/:id" element={<Category />} />
       </Routes>
     </Router>
   );

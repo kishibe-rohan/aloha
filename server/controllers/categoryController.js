@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Post = require("../models/Post");
 
 //Fetch all categories
 exports.getCategories = async (req, res) => {
@@ -37,5 +38,15 @@ exports.getCategory = async (req, res) => {
       message: "Error fetching category",
       err,
     });
+  }
+};
+
+//Get posts by category
+exports.getPostsByCategory = async (req, res) => {
+  try {
+    const posts = await Post.find({ categoryId: req.params.id });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };

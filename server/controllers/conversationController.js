@@ -1,4 +1,5 @@
 const Conversation = require("../models/Conversation");
+const User = require("../models/User");
 
 //Add new conversation
 exports.newConversation = async (req, res) => {
@@ -35,6 +36,22 @@ exports.getConversation = async (req, res) => {
     });
 
     res.status(200).json(conversation);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+//Get members from a conversation
+exports.getMembers = async (req, res) => {
+  try {
+    const conversation = await Conversation.findById(req.params.id);
+
+    const members = conversation.members;
+
+    const user1 = await User.findById(members[0]);
+    const user2 = await User.findById(members[1]);
+
+    res.status(200).json([user1, user2]);
   } catch (err) {
     res.status(500).json(err);
   }
