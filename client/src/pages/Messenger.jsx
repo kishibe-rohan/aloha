@@ -2,9 +2,11 @@ import {useContext,useState,useEffect,useRef} from 'react'
 import Navbar from '../components/Navbar.jsx'
 import Conversation from '../components/Conversation.jsx'
 import Message from '../components/Message.jsx'
+import OnlineChat from '../components/OnlineChat.jsx'
 
 import axios from 'axios'
 import {AuthContext} from '../context/AuthContext'
+import {io} from "socket.io-client"
 
 import styled from 'styled-components'
 
@@ -101,9 +103,38 @@ export default function Messenger()
     const [currentChat,setCurrentChat] = useState(null);
     const [messages,setMessages] = useState([]);
     const [newMessage,setNewMessage] = useState("");
-
+    const [arrivalMessage,setArrivalMessage] = useState(null);
+    const [onlineUsers,setOnlineUsers] = useState([]);
+    
     const {user} = useContext(AuthContext);
+
+    const socket = useRef();
     const scrollRef = useRef();
+
+    useEffect(() => {
+        socket.current = io("ws://localhost:9000");
+        socket.current.on("getMessage",(data) => {
+            setArrivalMessage({
+                sender:data.senderId,
+                text:data.text,
+                createdAt: Date.now()
+            })
+        })
+    },[])
+
+    useEffect(() => {
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
+        setMessages((prev) => [...prev,arrivalMessage])
+    },[arrivalMessage,currentChat])
+
+    useEffect(() => {
+        socket.current.emit("addUser",user._id);
+        socket.current.on("getUsers",(users) => {
+            setOnlineUsers(
+                users.followings.filter((f) => users.some((u) => u.userId === f))
+            )
+        })
+    },[user])
 
     useEffect(() => {
       const getConversations = async() => {
@@ -141,6 +172,12 @@ export default function Messenger()
         }
 
         const receiverId = currentChat.members.find((member) => member !== user._id)
+
+        socket.current.emit("sendMessage",{
+            senderId:user._id,
+            receiverId,
+            text:newMessage
+        })
 
         try{
             const res = await axios.post('/message',message);
@@ -199,7 +236,7 @@ export default function Messenger()
            </ChatBox>
            <ChatOnline>
                <ChatOnlineWrapper>
-                   ChatOnline
+                   <OnlineChat onlineUsers={onlineUsers} currentId={user._id} setCurrentChat={setCurrentChat}/>
                </ChatOnlineWrapper>
            </ChatOnline>
        </Container>
